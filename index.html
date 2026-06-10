@@ -419,20 +419,32 @@
 </TABLE>
 
 <script>
-function filterTopics() {
-  // Get the selected value from the dropdown menu
-  var selectedFilter = document.getElementById("levelFilter").value;
+// 1. Run this automatically whenever the page loads or you hit the "Back" button
+window.addEventListener('DOMContentLoaded', () => {
+  // Check if there is a previously saved filter choice
+  const savedFilter = localStorage.getItem("selectedFilter");
   
-  // Get the table and all its rows
-  var table = document.getElementById("topicTable");
-  var rows = table.getElementsByTagName("tr");
+  if (savedFilter) {
+    // Set the dropdown menu to match the saved choice
+    document.getElementById("levelFilter").value = savedFilter;
+    // Apply the filtering immediately
+    filterTopics();
+  }
+});
 
-  // Loop through all rows, skipping the header (i = 0)
-  for (var i = 1; i < rows.length; i++) {
-    var row = rows[i];
-    var levelData = row.getAttribute("data-level");
+function filterTopics() {
+  const selectedFilter = document.getElementById("levelFilter").value;
+  
+  // 2. Save the current choice to the browser's memory
+  localStorage.setItem("selectedFilter", selectedFilter);
+  
+  const table = document.getElementById("topicTable");
+  const rows = table.getElementsByTagName("tr");
 
-    // If 'all' is selected, or if the row contains the chosen keyword
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const levelData = row.getAttribute("data-level");
+
     if (selectedFilter === "all" || (levelData && levelData.split(" ").includes(selectedFilter))) {
       row.style.display = ""; // Show row
     } else {
